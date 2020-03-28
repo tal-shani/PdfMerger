@@ -5,10 +5,17 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.apache.pdfbox.cos.COSDictionary;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.cos.COSObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PageMode;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
+import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences;
+
+import static org.apache.pdfbox.pdmodel.PageMode.USE_OUTLINES;
 
 final class Merger implements AutoCloseable {
 	private Deque<PDDocument> inDocuments = new ArrayDeque<>();
@@ -73,6 +80,16 @@ final class Merger implements AutoCloseable {
 
 	public void save(String outname) throws IOException {
 		outDocument.getDocumentCatalog().setDocumentOutline(outOutline);
+
+		// Define ViewerPreferences
+		COSDictionary viewerPrefs = new COSDictionary();
+		viewerPrefs.setName(COSName.NON_FULL_SCREEN_PAGE_MODE, "UseOutlines");
+		viewerPrefs.setName(COSName.PAGE_MODE, "UseOutlines");
+		PDViewerPreferences pdViewer = new PDViewerPreferences(viewerPrefs);
+		outDocument.getDocumentCatalog().setViewerPreferences(pdViewer);
+
+		// Define PageMode
+		outDocument.getDocumentCatalog().setPageMode(USE_OUTLINES);
 		outDocument.save(outname);
 	}
 
