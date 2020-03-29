@@ -45,8 +45,7 @@ class SwingMerge extends JFrame {
 				return null;
 			}
 			successful = true;
-			result = "Done!\nThanks for using PDF Merger. Project's home page:\n"
-					+ "https://github.com/Yanpas/PdfMerger";
+			result = "PDF Created Successfully!";
 			return null;
 		}
 
@@ -104,13 +103,13 @@ class SwingMerge extends JFrame {
 		removeButton = new JButton("Remove");
 		moveDownButton = new JButton("Down");
 		mergeButton = new JButton("Merge");
-		for (JButton btn : new JButton[] { moveUpButton, addButton, removeButton, moveDownButton, mergeButton }) {
+		for (JButton btn : new JButton[] { moveUpButton, addButton, moveDownButton, removeButton, mergeButton }) {
 			btn.setMaximumSize(new Dimension(150, 50));
 		}
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-		for (JComponent comp : new JComponent[] { addButton, new JPanel(), moveUpButton, removeButton, moveDownButton,
+		for (JComponent comp : new JComponent[] { addButton, new JPanel(), moveUpButton, moveDownButton, removeButton,
 				new JPanel(), mergeButton })
 			buttonPanel.add(comp);
 		buttonPanel.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
@@ -193,7 +192,7 @@ class SwingMerge extends JFrame {
 		});
 		moveUpButton.addActionListener((ActionEvent e) -> {
 			int[] arr = fstringList.getSelectedIndices();
-			if (arr[0] > 0) {
+			if (arr.length > 0 && arr[0] > 0) {
 				int index = arr[arr.length - 1];
 				File selected = flistModel.get(arr[0] - 1);
 				flistModel.remove(arr[0] - 1);
@@ -201,11 +200,12 @@ class SwingMerge extends JFrame {
 				for (int j = 0; j < arr.length; ++j)
 					arr[j]--;
 				fstringList.setSelectedIndices(arr);
-			}
+			} else
+				return;
 		});
 		moveDownButton.addActionListener((ActionEvent e) -> {
 			int[] arr = fstringList.getSelectedIndices();
-			if (arr[arr.length - 1] < flistModel.getSize() - 1) {
+			if (arr.length > 0 && arr[arr.length - 1] < flistModel.getSize() - 1) {
 				int index = arr[0];
 				File selected = flistModel.get(arr[arr.length - 1] + 1);
 				flistModel.remove(arr[arr.length - 1] + 1);
