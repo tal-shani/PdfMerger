@@ -64,7 +64,7 @@ public class PdfMerger {
 			for (File file : infiles) {
 				if (progress)
 					System.out.println("Processing " + file.getName());
-				m.addDocument(file);
+				m.addDocument(file, null);
 			}
 			if (progress)
 				System.out.println("Saving");

@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSObject;
@@ -44,7 +47,7 @@ final class Merger implements AutoCloseable {
 		}
 	}
 
-	private void appendDoc(final File inFile) throws IOException {
+	private void appendDoc(final File inFile, final String titleFormat) throws IOException {
 		try {
 			inDocuments.push(PDDocument.load(inFile));
 		} catch (IOException e) {
@@ -58,6 +61,15 @@ final class Merger implements AutoCloseable {
 		String finname = inFile.getName();
 		if (finname.length() > 4)
 			finname = finname.substring(0, finname.length() - 4);
+
+		if (titleFormat != null && !titleFormat.isEmpty()) {
+			Pattern reg = Pattern.compile("(\\d+)");
+			Matcher m = reg.matcher(finname);
+			if (m.find()) {
+				finname = String.format(titleFormat, Integer.parseInt(m.group(0)));
+			}
+		}
+
 		PDDocumentOutline inOutline = inDoc.getDocumentCatalog().getDocumentOutline();
 
 		for (int i = 0; i < inPagesN; ++i)
@@ -74,8 +86,8 @@ final class Merger implements AutoCloseable {
 		outPagesN += inPagesN;
 	}
 
-	public void addDocument(File doc) throws IOException {
-		appendDoc(doc);
+	public void addDocument(File doc, String titleFormat) throws IOException {
+		appendDoc(doc, titleFormat);
 	}
 
 	public void save(String outname) throws IOException {

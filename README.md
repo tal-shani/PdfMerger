@@ -1,5 +1,5 @@
 # PDF Merger
-Welcome to PDF Merger home page! (Test)
+Welcome to PDF Merger home page!
 
 This program merges several pdfs into one and creates handy outline (tree of bookmarks).
 For example: doc1.pdf with outline:

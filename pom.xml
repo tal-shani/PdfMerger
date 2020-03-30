@@ -4,7 +4,7 @@
 
   <groupId>yanpas</groupId>
   <artifactId>pdfmerger</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <packaging>jar</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,7 +13,7 @@
   </properties>
 
   <name>Pdf Merger</name>
-  <url>https://github.com/Yanpas/PdfMerger</url>
+  <url>https://github.com/tal-shani/PdfMerger</url>
 
   <dependencies>
     <dependency>
