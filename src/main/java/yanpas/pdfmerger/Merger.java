@@ -12,8 +12,10 @@ import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSObject;
 import org.apache.pdfbox.pdmodel.PDDocument;
+
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PageMode;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences;
@@ -72,8 +74,12 @@ final class Merger implements AutoCloseable {
 
 		PDDocumentOutline inOutline = inDoc.getDocumentCatalog().getDocumentOutline();
 
-		for (int i = 0; i < inPagesN; ++i)
-			outDocument.addPage(inDoc.getPage(i));
+		for (int i = 0; i < inPagesN; ++i) {
+			PDPage currentPage = inDoc.getPage(i);
+			currentPage.setCropBox(PDRectangle.A4);
+			currentPage.setMediaBox(PDRectangle.A4);
+			outDocument.addPage(currentPage);
+		}
 
 		PDOutlineItem outRoot = new PDOutlineItem();
 		outRoot.setTitle(finname);

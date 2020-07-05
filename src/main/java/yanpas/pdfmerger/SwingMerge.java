@@ -1,6 +1,7 @@
 package yanpas.pdfmerger;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -74,7 +75,7 @@ class SwingMerge extends JFrame {
     private DefaultListModel<File> flistModel;
     private JList<File> fstringList;
     private JPanel buttonPanel;
-    private JButton moveUpButton, addButton, removeButton, moveDownButton, mergeButton;
+    private JButton moveUpButton, addButton, removeButton, moveDownButton, mergeButton, clearButton;
 
     private JDialog progressDialog;
     private JProgressBar progressBar;
@@ -102,16 +103,17 @@ class SwingMerge extends JFrame {
     private final void placeAllElements() {
         moveUpButton = new JButton("Up");
         addButton = new JButton("Add");
+        clearButton = new JButton("Clear");
         removeButton = new JButton("Remove");
         moveDownButton = new JButton("Down");
         mergeButton = new JButton("Merge");
-        for (JButton btn : new JButton[]{moveUpButton, addButton, moveDownButton, removeButton, mergeButton}) {
+        for (JButton btn : new JButton[]{moveUpButton, addButton, moveDownButton, removeButton, mergeButton, clearButton}) {
             btn.setMaximumSize(new Dimension(150, 50));
         }
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        for (JComponent comp : new JComponent[]{addButton, new JPanel(), moveUpButton, moveDownButton, removeButton,
+        for (JComponent comp : new JComponent[]{addButton, clearButton, new JPanel(), moveUpButton, moveDownButton, removeButton,
                 new JPanel(), mergeButton})
             buttonPanel.add(comp);
         buttonPanel.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
@@ -148,6 +150,9 @@ class SwingMerge extends JFrame {
                     return;
                 }
         });
+        clearButton.addActionListener((ActionEvent ae) -> {
+            flistModel.removeAllElements();
+        });
         removeButton.addActionListener((ActionEvent ae) -> {
             int[] selected = fstringList.getSelectedIndices();
             int removed = 0;
@@ -175,11 +180,13 @@ class SwingMerge extends JFrame {
                     null,
                     "Lecture %d");
             FileDialog fileChooser = new FileDialog(SwingMerge.this);
+            fileChooser.setTitle("Choose output location for merged PDF");
             fileChooser.setMode(FileDialog.SAVE);
             fileChooser.setVisible(true);
             String outpath = fileChooser.getFile();
             if (outpath == null)
                 return;
+            outpath = outpath + ".pdf";
             File[] farr = new File[flistModel.getSize()];
             for (int i = 0; i < farr.length; ++i)
                 farr[i] = flistModel.get(i);
